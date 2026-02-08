@@ -1,10 +1,10 @@
 --[[
 
-Just a program that identifies poker hands. Feel free to take and modify to your heart's content.
+Just a program that identifies poker hands. It's part of a larger Balatro code restructure. 
 
 ]]--
 
-
+-- List of card prefabs ripped from Balatro. "pos" is unused in this program.
 P_CARDS = {
         H_2={name = "2 of Hearts",value = '2', suit = 'Hearts', pos = {x=0,y=0}},
         H_3={name = "3 of Hearts",value = '3', suit = 'Hearts', pos = {x=1,y=0}},
@@ -59,14 +59,19 @@ P_CARDS = {
         S_K={name = "King of Spades",value = 'King', suit = 'Spades', pos = {x=11,y=3}},
         S_A={name = "Ace of Spades",value = 'Ace', suit = 'Spades', pos = {x=12,y=3}},
     }
-    
+
+-- Used to copy cards to allow for duplicates of cards (say, several Aces of Spades)
+-- Input: table
+-- Output: copy of table
 function copy(t)
   nt = {}
   for k,v in pairs(t) do nt[k] = v end
   return nt
 end
 
-
+-- Merge two list-like tables and remove duplicates
+-- Input: 2 tables
+-- Output: new table
 function table_set_merge(t1, t2)
   local nt = {}
   for i=1,#t1 do table.insert(nt,t1[i]) end
@@ -80,7 +85,9 @@ function table_set_merge(t1, t2)
   return nt
 end
 
-
+-- evalues the poker hand name and the cards that are part of it
+-- Input: list of 1-5 cards
+-- Output: {name=<str>, hand=<list-of-cards>}
 function evaluate_poker_hand(hand)
   -- card that count as muliple suits can have a copy in each suit-sub-table and not have issues
   local suit_subtable = {} -- [suit]
@@ -156,8 +163,8 @@ function evaluate_poker_hand(hand)
 
 end
 
-hand = {P_CARDS.S_T, P_CARDS.S_A, P_CARDS.D_Q, P_CARDS.C_2, P_CARDS.H_3}
---hand = {copy(P_CARDS.S_A), copy(P_CARDS.S_K), copy(P_CARDS.S_K), copy(P_CARDS.S_A), copy(P_CARDS.S_A)}
+--hand = {P_CARDS.S_T, P_CARDS.S_A, P_CARDS.D_Q, P_CARDS.C_2, P_CARDS.H_3}
+hand = {copy(P_CARDS.S_A), copy(P_CARDS.S_K), copy(P_CARDS.S_K), copy(P_CARDS.S_A), copy(P_CARDS.S_A)}
 t = evaluate_poker_hand(hand)
 print(t.name.."\n------------------")
 for i=1,#t.hand do print(t.hand[i].name) end
